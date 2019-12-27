@@ -1,6 +1,11 @@
 # Dev
 https://medium.com/@faizanahemad/participating-in-kaggle-data-science-competitions-part-1-step-by-step-guide-and-baseline-model-5b0c6973022a
 
+Path Kaggle Token ID
+C:\Users\[name]\.kaggle
+
+Path To Kaggle package
+C:\Users\[name]\AppData\Roaming\Python\Python36\Scripts
 
 To see :
 Z Transform
