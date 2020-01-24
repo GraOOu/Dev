@@ -7,6 +7,8 @@ C:\Users\[name]\.kaggle
 Path To Kaggle package
 C:\Users\[name]\AppData\Roaming\Python\Python36\Scripts
 
+https://www.lfd.uci.edu/~gohlke/pythonlibs/#xgboost
+
 To see :
 Z Transform
 champs électromagnétique en fonction de la distance
