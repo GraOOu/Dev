@@ -26,8 +26,8 @@ namespace MNIST
 
         }
 
-        int inputNbRow = 28;
-        int inputNbCol = 28;
+        static public int inputNbRow = 28;
+        static public int inputNbCol = 28;
 
         int cellSpacing = 20;
         int cellSize    = 20;
@@ -39,9 +39,9 @@ namespace MNIST
             base.OnPaint ( e );
             Graphics g = e.Graphics;
 
-            using ( Pen selPen      = new Pen ( Color.LightGreen ) )
-            using ( Pen grrrPen     = new Pen ( Color.Black ) )
-            using ( Pen graoouPen   = new Pen ( Color.Red ) )
+            using ( Pen selPen = new Pen ( Color.LightGreen ) )
+            using ( Pen grrrPen = new Pen ( Color.Black ) )
+            using ( Pen graoouPen = new Pen ( Color.Red ) )
             {
                 for ( int i = 0; i < inputNbRow; i++ )
                 {
@@ -84,10 +84,10 @@ namespace MNIST
 
         private int BigToLittleEndian ( int bigEndian )
         {
-                return ( bigEndian & 0x000000FF ) << 24 |
-                       ( bigEndian & 0x0000FF00 ) << 8 |
-                       ( bigEndian & 0x00FF0000 ) >> 8 |
-                       ( (int) ( bigEndian & 0xFF000000 ) ) >> 24;
+            return ( bigEndian & 0x000000FF ) << 24 |
+                   ( bigEndian & 0x0000FF00 ) << 8 |
+                   ( bigEndian & 0x00FF0000 ) >> 8 |
+                   ( (int) ( bigEndian & 0xFF000000 ) ) >> 24;
         }
 
         public class Point
@@ -167,23 +167,69 @@ namespace MNIST
 
                 // Fill Input to fed NN
 
-                input = new double [ sizeX * sizeY ];
+                input = new double[sizeX * sizeY];
 
                 for ( int i = 0; i < sizeX; i++ )
                 {
                     for ( int j = 0; j < sizeY; j++ )
                     {
-                        input[i * sizeY + j] = ((double) img[i, j]) / 256;
+                        input[i * sizeY + j] = ( (double) img[i, j] ) / 256;
                     }
                 }
 
-                output = new double [10];
+                output = new double[10];
                 for ( int i = 0; i < output.Length; i++ )
                 {
                     output[i] = -1.0;
                 }
                 output[label] = 1.0;
             }
+        }
+
+        public class NeuronToStringConverter 
+        {
+            public string ToStringMNIST ( Neuron neuron )
+            {
+                string result = "W=" + Environment.NewLine;
+
+                int weightCount = neuron.Weights.Count ( );
+
+                for ( int i = 0; i < weightCount; i++ )
+                {
+                    result += neuron.Weights [ i ].ToString ( "F4" );
+                    result += ";";
+
+                    if ( ( ( i + 1 ) % inputNbRow ) == 0 )
+                    {
+                        result += Environment.NewLine;
+                    }
+                }
+                // Bias ???
+
+                result += Environment.NewLine;
+                return result;
+            }
+
+        }
+
+        private void RasterNN_MNIST ( ActivationNetwork nn, string fileName )
+        {
+            string result = string.Empty;
+
+            for ( int l = 0; l < nn.Layers.Count ( ); l++ )
+            {
+                result += "Layer " + l + Environment.NewLine;
+
+                Layer layer = nn.Layers [ l ];
+                for ( int n = 0; n < layer.Neurons.Count ( ); n++ )
+                {
+                    result += "Neuron " + n + Environment.NewLine;
+
+                    Neuron neuron = layer.Neurons [ n ];
+                    result += new NeuronToStringConverter ( ).ToStringMNIST ( neuron );
+                }
+            }
+            File.WriteAllText ( fileName, result );
         }
 
         /// <summary>
@@ -246,15 +292,17 @@ namespace MNIST
             }
 
             // Neural network
-            // 28x28 input | First Layer 16 | Second Layer 16 | 10 Output.
+            // 28x28 input | First Layer 32 | 10 Output.
 
-            ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 128, 10 );
+            ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 32, 10 );
             network.Randomize ( ); // Not relevant changes
             BackPropagationLearning teacher = new BackPropagationLearning ( network );
 
+            RasterNN_MNIST ( network, "InitialNeuralNet.csv" );
+
             // Learning Loop
 
-            int numberOfEpok = 4;
+            int numberOfEpok = 0;
             List <double> errorTrend = new List<double> ( );
 
             for ( int i = 0; i < numberOfEpok; i++ )
