@@ -232,6 +232,8 @@ namespace MNIST
             File.WriteAllText ( fileName, result );
         }
 
+        
+
         /// <summary>
         /// Load Dataset and display the first
         /// </summary>
@@ -242,6 +244,100 @@ namespace MNIST
             string picsFileName   = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\train-images.idx3-ubyte";
             string labelsFileName = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\train-labels.idx1-ubyte";
 
+            List<TrainingDigit> trainingDigits = LoadMNIST ( picsFileName, labelsFileName );
+
+            int numberOfImages = trainingDigits.Count;
+
+            // Create Learning poll
+
+            double[][] inputs  = new double [numberOfImages][];
+            double[][] outputs = new double [numberOfImages][];
+
+            for ( int i = 0; i < numberOfImages; i++ )
+            {
+                inputs[i] = trainingDigits[i].input;
+                outputs[i] = trainingDigits[i].output;
+            }
+
+            // Neural network
+            // 28x28 input | First Layer 32 | 10 Output.
+
+            ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 32, 10 );
+            network.Randomize ( ); // Not relevant changes
+            BackPropagationLearning teacher = new BackPropagationLearning ( network );
+
+            RasterNN_MNIST ( network, "InitialNeuralNet.csv" );
+
+            // Learning Loop
+
+            int numberOfEpok = 1;
+            List <double> errorTrend = new List<double> ( );
+
+            for ( int i = 0; i < numberOfEpok; i++ )
+            {
+                // Run epoch of learning procedure
+                double error = teacher.RunEpoch ( inputs, outputs );
+                errorTrend.Add ( error );
+            }
+
+            // Save Network
+
+            RasterNN_MNIST ( network, "TrainedNeuralNet.csv" );
+
+            // Save Metrics
+            string metrics = string.Join ( ";", errorTrend );
+            File.WriteAllText ( "LearningMetrics.csv", metrics );
+
+            // Do a test
+
+            picsFileName   = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\t10k-images.idx3-ubyte";
+            labelsFileName = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\t10k-labels.idx1-ubyte";
+
+            List<TrainingDigit> testDigits = LoadMNIST ( picsFileName, labelsFileName );
+            string testMetrcis = string.Empty;
+
+            for ( int i = 0; i < testDigits.Count; i++ )
+            {
+                double[] testResult = network.Compute ( testDigits[i].input );
+
+                double max = testResult.Max ( );
+                int predicted = -1;
+                for ( int j = 0; j < testResult.Count ( ); j++ )
+                {
+                    if ( testResult [ i ] == max )
+                    {
+                        predicted = i; break;
+                    }
+                }
+
+                testMetrcis += ( testDigits[i].label == predicted ) ? "Ok" : "Ko";
+                testMetrcis += ";" + predicted + ";";
+                testMetrcis += string.Join ( ";", testResult );
+            }
+            File.WriteAllText ( "TestMetrics.csv", metrics );
+
+            // Display an example
+
+            double[] output = network.Compute ( testDigits[1].input );
+
+            img = testDigits[1].img;
+
+            txtLabel.Text = testDigits[1].label.ToString ( );
+            txtOutput.Text = string.Join ( Environment.NewLine, output.Select ( x => x.ToString ( "F3" ) ) );
+
+            Refresh ( );
+            Thread.Sleep ( 1000 );
+        }
+
+        /// <summary>
+        /// Load a MNIST File
+        /// </summary>
+        /// <param name="picsFileName"></param>
+        /// <param name="labelsFileName"></param>
+        /// <param name="numberOfImages"></param>
+        /// <param name="trainingDigits"></param>
+        private List<TrainingDigit> LoadMNIST ( string picsFileName, string labelsFileName )
+        {
             BinaryReader imageReader = new BinaryReader ( File.Open ( picsFileName, FileMode.Open ) );
             BinaryReader labelReader = new BinaryReader ( File.Open ( labelsFileName, FileMode.Open ) );
 
@@ -257,13 +353,13 @@ namespace MNIST
             int magicNumberLabel = BigToLittleEndian ( labelReader.ReadInt32 ( ) );
             int numberOfItems    = BigToLittleEndian ( labelReader.ReadInt32 ( ) );
 
-            List<TrainingDigit> trainingDigits = new List<TrainingDigit> ( );
+            List<TrainingDigit> digits = new List<TrainingDigit> ( );
 
             // Read Images
 
             for ( int trainingDigitIdx = 0; trainingDigitIdx < numberOfImages; trainingDigitIdx++ )
             {
-                img = new int [numberOfRows, numberOfColumns];
+                img = new int[numberOfRows, numberOfColumns];
 
                 for ( int i = 0; i < numberOfRows; i++ )
                 {
@@ -274,62 +370,13 @@ namespace MNIST
                     }
                 }
                 int label = labelReader.ReadByte ( );
-                trainingDigits.Add ( new TrainingDigit ( img, label ) );
+                digits.Add ( new TrainingDigit ( img, label ) );
             }
 
             imageReader.Close ( );
             labelReader.Close ( );
 
-            // Create Learning poll
-
-            double[][] inputs  = new double [numberOfImages][];
-            double[][] outputs = new double [numberOfImages][];
-
-            for ( int i = 0; i < numberOfImages; i++ )
-            {
-                inputs[i]  = trainingDigits[i].input;
-                outputs[i] = trainingDigits[i].output;
-            }
-
-            // Neural network
-            // 28x28 input | First Layer 32 | 10 Output.
-
-            ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 32, 10 );
-            network.Randomize ( ); // Not relevant changes
-            BackPropagationLearning teacher = new BackPropagationLearning ( network );
-
-            RasterNN_MNIST ( network, "InitialNeuralNet.csv" );
-
-            // Learning Loop
-
-            int numberOfEpok = 0;
-            List <double> errorTrend = new List<double> ( );
-
-            for ( int i = 0; i < numberOfEpok; i++ )
-            {
-                // Run epoch of learning procedure
-                double error = teacher.RunEpoch ( inputs, outputs );
-                errorTrend.Add ( error );
-            }
-
-            // Save Network
-            network.Save ( "TrainedNetwork.network" );
-
-            // Save Metrics
-            string metrics = string.Join ( ";", errorTrend );
-            File.WriteAllText ( "LearningMetrics.csv", metrics );
-
-            // Do a test
-
-            double[] output = network.Compute ( trainingDigits[1].input );
-
-            img = trainingDigits[1].img;
-
-            txtLabel.Text  = trainingDigits[1].label.ToString ( );
-            txtOutput.Text = string.Join ( Environment.NewLine, output.Select ( x => x.ToString ( "F3" ) ) );
-
-            Refresh ( );
-            Thread.Sleep ( 1000 );           
+            return digits;
         }
     }
 }
