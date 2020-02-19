@@ -265,6 +265,7 @@ namespace MNIST
             ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 32, 10 );
             network.Randomize ( ); // Not relevant changes
             BackPropagationLearning teacher = new BackPropagationLearning ( network );
+            teacher.LearningRate = 2;
 
             WriteNeuralNetInFile ( network, "InitialNeuralNet.csv" );
 
@@ -283,7 +284,7 @@ namespace MNIST
                 {
                     double[] networkOut = network.Compute ( trainingDigits[j].input );
 
-                    teacher.Run ( trainingDigits[j].input, trainingDigits[j].output );
+                    error += teacher.Run ( trainingDigits[j].input, trainingDigits[j].output );
                 }
                 errorTrend.Add ( error );
             }
