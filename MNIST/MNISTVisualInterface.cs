@@ -180,7 +180,7 @@ namespace MNIST
                 output = new double[10];
                 for ( int i = 0; i < output.Length; i++ )
                 {
-                    output[i] = -1.0;
+                    output[i] = 0.0;
                 }
                 output[label] = 1.0;
             }
@@ -212,7 +212,7 @@ namespace MNIST
 
         }
 
-        private void RasterNN_MNIST ( ActivationNetwork nn, string fileName )
+        private void WriteNeuralNetInFile ( ActivationNetwork nn, string fileName )
         {
             string result = string.Empty;
 
@@ -266,7 +266,7 @@ namespace MNIST
             network.Randomize ( ); // Not relevant changes
             BackPropagationLearning teacher = new BackPropagationLearning ( network );
 
-            RasterNN_MNIST ( network, "InitialNeuralNet.csv" );
+            WriteNeuralNetInFile ( network, "InitialNeuralNet.csv" );
 
             // Learning Loop
 
@@ -276,13 +276,21 @@ namespace MNIST
             for ( int i = 0; i < numberOfEpok; i++ )
             {
                 // Run epoch of learning procedure
-                double error = teacher.RunEpoch ( inputs, outputs );
+                // double error = teacher.RunEpoch ( inputs, outputs );
+                
+                double error = 0.0;
+                for ( int j = 0; j < numberOfImages; j++ )
+                {
+                    double[] networkOut = network.Compute ( trainingDigits[j].input );
+
+                    teacher.Run ( trainingDigits[j].input, trainingDigits[j].output );
+                }
                 errorTrend.Add ( error );
             }
 
             // Save Network
 
-            RasterNN_MNIST ( network, "TrainedNeuralNet.csv" );
+            WriteNeuralNetInFile ( network, "TrainedNeuralNet.csv" );
 
             // Save Metrics
             string metrics = string.Join ( ";", errorTrend );
@@ -294,7 +302,7 @@ namespace MNIST
             labelsFileName = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\t10k-labels.idx1-ubyte";
 
             List<TrainingDigit> testDigits = LoadMNIST ( picsFileName, labelsFileName );
-            string testMetrcis = string.Empty;
+            string testMetrics = string.Empty;
 
             for ( int i = 0; i < testDigits.Count; i++ )
             {
@@ -304,17 +312,17 @@ namespace MNIST
                 int predicted = -1;
                 for ( int j = 0; j < testResult.Count ( ); j++ )
                 {
-                    if ( testResult [ i ] == max )
+                    if ( testResult [ j ] == max )
                     {
-                        predicted = i; break;
+                        predicted = j; break;
                     }
                 }
 
-                testMetrcis += ( testDigits[i].label == predicted ) ? "Ok" : "Ko";
-                testMetrcis += ";" + predicted + ";";
-                testMetrcis += string.Join ( ";", testResult );
+                testMetrics += ( testDigits[i].label == predicted ) ? "Ok" : "Ko";
+                testMetrics += ";" + predicted + ";";
+                testMetrics += string.Join ( ";", testResult );
             }
-            File.WriteAllText ( "TestMetrics.csv", metrics );
+            File.WriteAllText ( "TestMetrics.csv", testMetrics );
 
             // Display an example
 
