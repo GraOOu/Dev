@@ -148,7 +148,7 @@ namespace MNIST
             return bbox;
         }
 
-        public class TrainingDigit
+        public class MNISTDigit
         {
             public int[,] img;
             public int    label;
@@ -157,7 +157,7 @@ namespace MNIST
             public double[] output;
             public double   error;
 
-            public TrainingDigit ( int[,] imgInput, int labelInput )
+            public MNISTDigit ( int[,] imgInput, int labelInput )
             {
                 img = imgInput;
                 label = labelInput;
@@ -186,54 +186,6 @@ namespace MNIST
             }
         }
 
-        public class NeuronToStringConverter 
-        {
-            public string ToStringMNIST ( Neuron neuron )
-            {
-                string result = "W=" + Environment.NewLine;
-
-                int weightCount = neuron.Weights.Count ( );
-
-                for ( int i = 0; i < weightCount; i++ )
-                {
-                    result += neuron.Weights [ i ].ToString ( "F4" );
-                    result += ";";
-
-                    if ( ( ( i + 1 ) % inputNbRow ) == 0 )
-                    {
-                        result += Environment.NewLine;
-                    }
-                }
-                // Bias ???
-
-                result += Environment.NewLine;
-                return result;
-            }
-
-        }
-
-        private void WriteNeuralNetInFile ( ActivationNetwork nn, string fileName )
-        {
-            string result = string.Empty;
-
-            for ( int l = 0; l < nn.Layers.Count ( ); l++ )
-            {
-                result += "Layer " + l + Environment.NewLine;
-
-                Layer layer = nn.Layers [ l ];
-                for ( int n = 0; n < layer.Neurons.Count ( ); n++ )
-                {
-                    result += "Neuron " + n + Environment.NewLine;
-
-                    Neuron neuron = layer.Neurons [ n ];
-                    result += new NeuronToStringConverter ( ).ToStringMNIST ( neuron );
-                }
-            }
-            File.WriteAllText ( fileName, result );
-        }
-
-        
-
         /// <summary>
         /// Load Dataset and display the first
         /// </summary>
@@ -244,7 +196,7 @@ namespace MNIST
             string picsFileName   = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\train-images.idx3-ubyte";
             string labelsFileName = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\train-labels.idx1-ubyte";
 
-            List<TrainingDigit> trainingDigits = LoadMNIST ( picsFileName, labelsFileName );
+            List<MNISTDigit> trainingDigits = LoadMNIST ( picsFileName, labelsFileName );
 
             int numberOfImages = trainingDigits.Count;
 
@@ -260,75 +212,24 @@ namespace MNIST
             }
 
             // Neural network
-            // 28x28 input | First Layer 32 | 10 Output.
 
-            ActivationNetwork network = new ActivationNetwork ( new SigmoidFunction ( ), 28*28, 32, 10 );
-            network.Randomize ( ); // Not relevant changes
-            BackPropagationLearning teacher = new BackPropagationLearning ( network );
-            teacher.LearningRate = 2;
+            AbstractNeuralNetwork neuralNetwork = new AccordNeuralNetwork ( );
 
-            WriteNeuralNetInFile ( network, "InitialNeuralNet.csv" );
-
-            // Learning Loop
-
-            int numberOfEpok = 1;
-            List <double> errorTrend = new List<double> ( );
-
-            for ( int i = 0; i < numberOfEpok; i++ )
-            {
-                // Run epoch of learning procedure
-                // double error = teacher.RunEpoch ( inputs, outputs );
-                
-                double error = 0.0;
-                for ( int j = 0; j < numberOfImages; j++ )
-                {
-                    double[] networkOut = network.Compute ( trainingDigits[j].input );
-
-                    error += teacher.Run ( trainingDigits[j].input, trainingDigits[j].output );
-                }
-                errorTrend.Add ( error );
-            }
-
-            // Save Network
-
-            WriteNeuralNetInFile ( network, "TrainedNeuralNet.csv" );
-
-            // Save Metrics
-            string metrics = string.Join ( ";", errorTrend );
-            File.WriteAllText ( "LearningMetrics.csv", metrics );
-
-            // Do a test
+            neuralNetwork.Create ( 32 );
+            neuralNetwork.Learn ( 4, 16, trainingDigits );
+            
+            // Test
 
             picsFileName   = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\t10k-images.idx3-ubyte";
             labelsFileName = "C:\\Users\\ecaruyer\\Kaggle\\MNIST\\t10k-labels.idx1-ubyte";
 
-            List<TrainingDigit> testDigits = LoadMNIST ( picsFileName, labelsFileName );
-            string testMetrics = string.Empty;
+            List<MNISTDigit> testDigits = LoadMNIST ( picsFileName, labelsFileName );
 
-            for ( int i = 0; i < testDigits.Count; i++ )
-            {
-                double[] testResult = network.Compute ( testDigits[i].input );
-
-                double max = testResult.Max ( );
-                int predicted = -1;
-                for ( int j = 0; j < testResult.Count ( ); j++ )
-                {
-                    if ( testResult [ j ] == max )
-                    {
-                        predicted = j; break;
-                    }
-                }
-
-                testMetrics += ( testDigits[i].label == predicted ) ? "Ok" : "Ko";
-                testMetrics += ";" + predicted + ";";
-                testMetrics += string.Join ( ";", testResult );
-            }
-            File.WriteAllText ( "TestMetrics.csv", testMetrics );
+            neuralNetwork.Test ( testDigits );
 
             // Display an example
 
-            double[] output = network.Compute ( testDigits[1].input );
-
+            double[] output = neuralNetwork.Compute ( testDigits[1] );
             img = testDigits[1].img;
 
             txtLabel.Text = testDigits[1].label.ToString ( );
@@ -345,7 +246,7 @@ namespace MNIST
         /// <param name="labelsFileName"></param>
         /// <param name="numberOfImages"></param>
         /// <param name="trainingDigits"></param>
-        private List<TrainingDigit> LoadMNIST ( string picsFileName, string labelsFileName )
+        private List<MNISTDigit> LoadMNIST ( string picsFileName, string labelsFileName )
         {
             BinaryReader imageReader = new BinaryReader ( File.Open ( picsFileName, FileMode.Open ) );
             BinaryReader labelReader = new BinaryReader ( File.Open ( labelsFileName, FileMode.Open ) );
@@ -362,7 +263,7 @@ namespace MNIST
             int magicNumberLabel = BigToLittleEndian ( labelReader.ReadInt32 ( ) );
             int numberOfItems    = BigToLittleEndian ( labelReader.ReadInt32 ( ) );
 
-            List<TrainingDigit> digits = new List<TrainingDigit> ( );
+            List<MNISTDigit> digits = new List<MNISTDigit> ( );
 
             // Read Images
 
@@ -379,7 +280,7 @@ namespace MNIST
                     }
                 }
                 int label = labelReader.ReadByte ( );
-                digits.Add ( new TrainingDigit ( img, label ) );
+                digits.Add ( new MNISTDigit ( img, label ) );
             }
 
             imageReader.Close ( );
