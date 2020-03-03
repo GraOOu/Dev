@@ -213,7 +213,8 @@ namespace MNIST
 
             // Neural network
 
-            AbstractNeuralNetwork neuralNetwork = new AccordNeuralNetwork ( );
+            // AbstractNeuralNetwork neuralNetwork = new AccordNeuralNetwork ( );
+            AbstractNeuralNetwork neuralNetwork = new TensorFlowNeuralNetwork ( );
 
             neuralNetwork.Create ( 32 );
             neuralNetwork.Learn ( 4, 16, trainingDigits );

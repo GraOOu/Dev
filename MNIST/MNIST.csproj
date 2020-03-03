@@ -68,6 +68,9 @@
     <Reference Include="NumSharp.Core, Version=0.20.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\NumSharp.0.20.5\lib\netstandard2.0\NumSharp.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Python.Included, Version=3.7.3.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Python.Included.3.7.3.4\lib\netstandard2.0\Python.Included.dll</HintPath>
+    </Reference>
     <Reference Include="Python.Runtime, Version=3.7.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Python.Runtime.NETStandard.3.7.1\lib\netstandard2.0\Python.Runtime.dll</HintPath>
     </Reference>
