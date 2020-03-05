@@ -12,6 +12,7 @@ using Keras;
 using Keras.Models;
 using Keras.Layers;
 using Keras.Callbacks;
+using System.Windows.Forms;
 
 namespace MNIST
 {
@@ -34,7 +35,10 @@ namespace MNIST
         /// <param name="hiddenLayerSize"></param>
         public override void Create ( int hiddenLayerSize )
         {
-            
+            Python.Runtime.PythonEngine.PythonPath += ";" +
+             "C:\\Users\\ecaruyer\\AppData\\Local\\Programs\\Python\\Python37\\Lib\\site-packages";
+
+            MessageBox.Show ( Python.Runtime.PythonEngine.PythonPath );
 
             model = new Sequential ( );
 
