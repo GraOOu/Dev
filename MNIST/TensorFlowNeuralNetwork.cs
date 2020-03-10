@@ -37,8 +37,7 @@ namespace MNIST
         {
             Python.Runtime.PythonEngine.PythonPath += ";" +
              "C:\\Users\\ecaruyer\\AppData\\Local\\Programs\\Python\\Python37\\Lib\\site-packages";
-
-            MessageBox.Show ( Python.Runtime.PythonEngine.PythonPath );
+            // MessageBox.Show ( Python.Runtime.PythonEngine.PythonPath );
 
             model = new Sequential ( );
 
@@ -60,8 +59,11 @@ namespace MNIST
         {
             ((xTrain, yTrain), (xTest, yTest)) = Keras.Datasets.MNIST.LoadData ( );
 
-            xTrain = xTrain.flatten ( );
-            xTest  = xTest.flatten ( );
+            xTrain = xTrain.reshape ( xTrain.shape[0], image_size );
+            xTest = xTest.reshape ( xTest.shape[0], image_size );
+
+            xTrain /= 255;
+            xTest  /= 255;
 
             yTrain = Keras.Utils.Util.ToCategorical ( yTrain, num_classes );
             yTest  = Keras.Utils.Util.ToCategorical ( yTest, num_classes );
@@ -88,13 +90,13 @@ namespace MNIST
         }
 
         /// <summary>
-        /// 
+        /// Make a prediction
         /// </summary>
         /// <param name="digit"></param>
         /// <returns></returns>
         public override double[] Compute ( MNISTDigit digit )
         {
-            return model.Predict ( xTrain [ 1 ] ).GetData < double > ( );
+            return model.Predict ( xTrain[0].reshape ( 1, image_size ) ).GetData < double > ( );
         }
     }
 }
