@@ -1,1 +1,1 @@
-![SeaOfClasses](link-to-image)
+![SeaOfClasses](SeaOfClasses.svg)
