@@ -47,7 +47,7 @@ format 222
   
   classview 128042 "Agents"
     
-    classdiagramsettings member_max_width 0 end
+    classdiagramsettings show_members_full_definition yes member_max_width 0 end
     
     classcompositediagramsettings end
     
@@ -93,9 +93,6 @@ ${docstring}${members}
 	  b parent class_ref 128298 // Sensor
       end
 
-      classrelation 128810 // <aggregation>
-	relation_ref 128426 // <aggregation>
-      end
     end
 
     class 128042 "Agent"
@@ -146,6 +143,10 @@ ${docstring}${body}
 "
 	
       end
+
+      classrelation 136874 // <aggregation>
+	relation_ref 135850 // <aggregation>
+      end
     end
 
     class 128170 "Environment"
@@ -171,18 +172,6 @@ ${docstring}${members}
 ${docstring}${body}
 "
 	
-      end
-
-      classrelation 128682 // <aggregation>
-	relation 128426 o---
-	  a role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 128682 // <aggregation>
-	  b role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 128810 // <aggregation>
       end
 
       classrelation 129194 // <aggregation>
@@ -211,6 +200,27 @@ ${docstring}${body}
 	    python "${comment}${self}${name} = ${value}
 "
 	    classrelation_ref 130090 // <aggregation>
+      end
+
+      classrelation 136618 // <unidirectional association>
+	relation 135722 --->
+	  a role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 136618 // <unidirectional association>
+	  b parent class_ref 128554 // Percept
+      end
+
+      classrelation 136746 // <aggregation>
+	relation 135850 o---
+	  a role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 136746 // <aggregation>
+	  b role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 136874 // <aggregation>
       end
     end
 
@@ -291,6 +301,30 @@ ${docstring}${members}
 	idl_decl ""
 	mysql_decl ""
 	MysqlColumn
+      end
+
+      classrelation 137002 // <dependency>
+	relation 135978 -_->
+	  a public
+	    python "${type}"
+	    classrelation_ref 137002 // <dependency>
+	  b parent class_ref 128554 // Percept
+      end
+
+      classrelation 137130 // <dependency>
+	relation 136106 -_->
+	  a public
+	    python "${type}"
+	    classrelation_ref 137130 // <dependency>
+	  b parent class_ref 128682 // AgentFunction
+      end
+
+      classrelation 137258 // <dependency>
+	relation 136234 -_->
+	  a public
+	    python "${type}"
+	    classrelation_ref 137258 // <dependency>
+	  b parent class_ref 128938 // Action
       end
     end
 
