@@ -1,7 +1,7 @@
 
-import PerformanceMeasure
 import Action
 import Agent
+import PerformanceMeasure
 
 class Environment(object):
     def Update(Date):
@@ -10,6 +10,9 @@ class Environment(object):
         ## Bouml preserved body end 0001F42A
         
     def __init__(self):
+        self. = None
+        self. = None
+        self. = None
         self. = None
         self. = None
         self. = None

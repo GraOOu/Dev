@@ -26,7 +26,7 @@ classcanvas 129194 class_ref 128682 // AgentFunction
 end
 classcanvas 129450 class_ref 128810 // PerformanceMeasure
   classdiagramsettings member_max_width 0 end
-  xyzwh 322 319 2000 175 53
+  xyzwh 320 295 2000 173 65
 end
 note 129706 "- All Classes are abstracts
 - Unit test shall be done by sending PerceptSequences to Agent and checking result according AgentFunction."
@@ -40,7 +40,7 @@ note 130858 "<<Observer>>"
 note 130986 "<<Command>>"
   font small_bold  xyzwh 600 295 2000 89 35
 note 131498 "<<Observer>>"
-  font small_bold  xyzwh 288.5 364.5 2006 85 35
+  font small_bold  xyzwh 299.5 350.5 2006 85 35
 note 131626 "Design & Testing"
   font small_bold  xyzwh 544 57 2000 101 35
 relationcanvas 128682 relation_ref 128042 // <aggregation>
@@ -58,13 +58,6 @@ relationcanvas 128810 relation_ref 128170 // <aggregation>
 end
 relationcanvas 128938 relation_ref 128298 // <unidirectional association>
   from ref 128554 z 2001 to ref 128298
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
-end
-relationcanvas 129578 relation_ref 128682 // <aggregation>
-  decenter_begin 884
-  decenter_end 435
-  from ref 128170 z 2001 to ref 129450
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
@@ -99,6 +92,15 @@ relationcanvas 131754 relation_ref 135978 // <dependency>
 end
 relationcanvas 133930 relation_ref 136234 // <dependency>
   from ref 129194 z 2007 to ref 130346
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 135210 relation_ref 143530 // <aggregation>
+  geometry HVH unfixed
+  decenter_end 796
+  from ref 129450 z 2001 to point 281 325
+  line 135594 z 2001 to point 281 317
+  line 135722 z 2001 to ref 128170
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end

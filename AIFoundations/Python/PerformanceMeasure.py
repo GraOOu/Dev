@@ -9,5 +9,9 @@ class PerformanceMeasure(object):
         
     def __init__(self):
         self. = None
+        self. = None
+        self. = None
+        self. = None
+        self. = None
         pass
     
