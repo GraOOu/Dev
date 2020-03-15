@@ -1,0 +1,13 @@
+window_sizes 1280 657 272 1003 504 104
+
+diagrams
+  active  classdiagram_ref 128042 // SeaOfClass
+    1003 504 100 A4 0 0
+end
+show_stereotypes
+selected artifact_ref 128426 // Actuator
+open
+  deploymentview_ref 128042 // Agents
+end
+end
+verbose

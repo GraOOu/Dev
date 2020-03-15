@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Bouml (http://bouml.free.fr/) -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="838" height="383" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="822" y="158" width="3" height="157" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="706" y="312" width="119" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="702" y="154" width="120" height="158" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="762" y="166">Agent</text>
+	<line stroke="black" stroke-opacity="1" x1="702" y1="174" x2="822" y2="174" />
+	<line stroke="black" stroke-opacity="1" x1="702" y1="182" x2="822" y2="182" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="706" y="194">Update()</text>
+</g>
+<g>
+	<polygon fill="#ffdca8" stroke="black" stroke-opacity="1" points="588,153 662,153 662,163 672,163 672,187 588,187 588,153" />
+	<line stroke="black" stroke-opacity="1" x1="662" y1="153" x2="672" y2="163" />
+	<text font-family="Helvetica" font-size="7" fill="#000000" xml:space="preserve" font-weight="bold" x="598" y="174">&lt;&lt;Observer&gt;&gt;</text>
+</g>
+<g>
+	<polygon fill="#ffdca8" stroke="black" stroke-opacity="1" points="45,19 309,19 309,29 319,29 319,103 45,103 45,19" />
+	<line stroke="black" stroke-opacity="1" x1="309" y1="19" x2="319" y2="29" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="55" y="45">- All Classes are abstracts</text>
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="55" y="61">- Unit test shall be done by sending</text>
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="55" y="77">PerceptSequences to Agent and checking</text>
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="55" y="93">result according AgentFunction.</text>
+</g>
+<g>
+	<polygon fill="#ffdca8" stroke="black" stroke-opacity="1" points="600,295 678,295 678,305 688,305 688,329 600,329 600,295" />
+	<line stroke="black" stroke-opacity="1" x1="678" y1="295" x2="688" y2="305" />
+	<text font-family="Helvetica" font-size="7" fill="#000000" xml:space="preserve" font-weight="bold" x="610" y="316">&lt;&lt;Command&gt;&gt;</text>
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="282" y="121" width="3" height="249" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="118" y="367" width="167" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="114" y="117" width="168" height="250" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="198" y="129">Environment</text>
+	<line stroke="black" stroke-opacity="1" x1="114" y1="137" x2="282" y2="137" />
+	<line stroke="black" stroke-opacity="1" x1="114" y1="145" x2="282" y2="145" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="118" y="157">Update(in Date : )</text>
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="637" y="195" width="3" height="35" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="557" y="227" width="83" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="553" y="191" width="84" height="36" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="595" y="203">Sensor</text>
+	<line stroke="black" stroke-opacity="1" x1="553" y1="211" x2="637" y2="211" />
+	<line stroke="black" stroke-opacity="1" x1="553" y1="219" x2="637" y2="219" />
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="636" y="254" width="3" height="37" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="556" y="288" width="83" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="552" y="250" width="84" height="38" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="594" y="262">Actuator</text>
+	<line stroke="black" stroke-opacity="1" x1="552" y1="270" x2="636" y2="270" />
+	<line stroke="black" stroke-opacity="1" x1="552" y1="278" x2="636" y2="278" />
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="421" y="197" width="3" height="35" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="325" y="229" width="99" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="321" y="193" width="100" height="36" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="371" y="205">Percept</text>
+	<line stroke="black" stroke-opacity="1" x1="321" y1="213" x2="421" y2="213" />
+	<line stroke="black" stroke-opacity="1" x1="321" y1="221" x2="421" y2="221" />
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="525" y="33" width="3" height="65" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="349" y="95" width="179" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="345" y="29" width="180" height="66" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="435" y="41">AgentFunction</text>
+	<line stroke="black" stroke-opacity="1" x1="345" y1="49" x2="525" y2="49" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="349" y="61">PerceptSequences</text>
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="349" y="79">MatchingActions</text>
+	<line stroke="black" stroke-opacity="1" x1="345" y1="87" x2="525" y2="87" />
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="492" y="323" width="3" height="47" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="326" y="367" width="169" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="322" y="319" width="170" height="48" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="407" y="331">PerformanceMeasure</text>
+	<line stroke="black" stroke-opacity="1" x1="322" y1="339" x2="492" y2="339" />
+	<line stroke="black" stroke-opacity="1" x1="322" y1="347" x2="492" y2="347" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" x="326" y="359">Benchmark()</text>
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="701" y1="212" x2="641" y2="211" />
+	<polygon fill="#ffffff" stroke="black" stroke-opacity="1" points="701,212 694,217 689,211 695,205" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="552" y1="211" x2="545" y2="205" />
+	<line stroke="black" stroke-opacity="1" x1="552" y1="211" x2="546" y2="217" />
+	<line stroke="black" stroke-opacity="1" x1="425" y1="212" x2="552" y2="211" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="286" y1="212" x2="320" y2="212" />
+	<polygon fill="#ffffff" stroke="black" stroke-opacity="1" points="286,212 292,206 298,212 292,218" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="286" y1="342" x2="321" y2="342" />
+	<polygon fill="#ffffff" stroke="black" stroke-opacity="1" points="286,342 292,336 298,342 292,348" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="701" y1="270" x2="640" y2="270" />
+	<polygon fill="#ffffff" stroke="black" stroke-opacity="1" points="701,270 695,276 689,270 695,264" />
+</g>
+<g>
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="419" y="253" width="3" height="35" />
+	<rect fill="#cbcbcb" stroke="none" stroke-opacity="1" x="325" y="285" width="97" height="3" />
+	<rect fill="#f6f6f6" stroke="black" stroke-width="1" stroke-opacity="1" x="321" y="249" width="98" height="36" />
+	<text font-family="Helvetica" font-size="10" fill="#000000" xml:space="preserve" font-weight="bold" text-anchor="middle" x="370" y="261">Action</text>
+	<line stroke="black" stroke-opacity="1" x1="321" y1="269" x2="419" y2="269" />
+	<line stroke="black" stroke-opacity="1" x1="321" y1="277" x2="419" y2="277" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="423" y1="269" x2="428" y2="275" />
+	<line stroke="black" stroke-opacity="1" x1="423" y1="269" x2="429" y2="263" />
+	<line stroke="black" stroke-opacity="1" x1="551" y1="270" x2="423" y2="269" />
+</g>
+<g>
+	<line stroke="black" stroke-opacity="1" x1="286" y1="270" x2="320" y2="269" />
+	<polygon fill="#ffffff" stroke="black" stroke-opacity="1" points="286,270 291,263 297,269 292,275" />
+</g>
+</svg>
