@@ -1,1 +1,1 @@
-![SeaOfClasses](https://github.com/GraOOu/Dev/blob/master/AIFoundations/SeaOfClasses.svg)
+![SeaOfClasses](https://github.com/GraOOu/Dev/blob/master/AIFoundations/SeaOfClasses.png)
