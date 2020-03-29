@@ -17,6 +17,5 @@ class Environment(object):
         self. = None
         self. = None
         self. = None
-        self. = None
         pass
     

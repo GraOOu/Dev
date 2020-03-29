@@ -1,6 +1,6 @@
 format 222
 "BoumlProject"
-  revision 4
+  revision 5
   modified_by 42 "GraOOu"
   python_root_dir "C:\\_Work\\GitHub\\AIFoundations\\Python\\"
 
@@ -84,14 +84,6 @@ ${docstring}${members}
       explicit_switch_type ""
       mysql_decl ""
       
-      classrelation 128554 // <unidirectional association>
-	relation 128298 --->
-	  a role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 128554 // <unidirectional association>
-	  b parent class_ref 128298 // Sensor
-      end
     end
 
     class 128042 "Agent"
@@ -146,6 +138,18 @@ ${docstring}${body}
       classrelation 136874 // <aggregation>
 	relation_ref 135850 // <aggregation>
       end
+
+      classrelation 151978 // <aggregation>
+	relation 150186 o---
+	  a role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 151978 // <aggregation>
+	  b role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 152106 // <aggregation>
+      end
     end
 
     class 128170 "Environment"
@@ -189,15 +193,6 @@ ${docstring}${body}
 	    classrelation_ref 130090 // <aggregation>
       end
 
-      classrelation 136618 // <unidirectional association>
-	relation 135722 --->
-	  a role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 136618 // <unidirectional association>
-	  b parent class_ref 128554 // Percept
-      end
-
       classrelation 136746 // <aggregation>
 	relation 135850 o---
 	  a role_name "" private
@@ -222,8 +217,16 @@ ${docstring}${body}
 	relation_ref 143402 // <aggregation>
       end
 
-      classrelation 145322 // <aggregation>
-	relation_ref 143530 // <aggregation>
+      classrelation 152362 // <aggregation>
+	relation 150442 o---
+	  a role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 152362 // <aggregation>
+	  b role_name "" private
+	    python "${comment}${self}${name} = ${value}
+"
+	    classrelation_ref 152490 // <aggregation>
       end
     end
 
@@ -241,6 +244,14 @@ ${docstring}${members}
       
       classrelation 128170 // <aggregation>
 	relation_ref 128042 // <aggregation>
+      end
+
+      classrelation 152234 // <dependency>
+	relation 150314 -_->
+	  a public
+	    python "${type}"
+	    classrelation_ref 152234 // <dependency>
+	  b parent class_ref 128170 // Environment
       end
     end
 
@@ -400,16 +411,8 @@ ${docstring}${body}
 	    classrelation_ref 145066 // <aggregation>
       end
 
-      classrelation 145194 // <aggregation>
-	relation 143530 o---
-	  a role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 145194 // <aggregation>
-	  b role_name "" private
-	    python "${comment}${self}${name} = ${value}
-"
-	    classrelation_ref 145322 // <aggregation>
+      classrelation 152490 // <aggregation>
+	relation_ref 150442 // <aggregation>
       end
     end
 
@@ -439,6 +442,31 @@ ${docstring}${members}
 
       classrelation 130090 // <aggregation>
 	relation_ref 129194 // <aggregation>
+      end
+    end
+
+    class 135466 "UtilityFunction"
+      visibility package 
+      cpp_decl ""
+      java_decl ""
+      php_decl ""
+      python_2_2 python_decl "class ${name}${inherit}:
+${docstring}${members}
+"
+      idl_decl ""
+      explicit_switch_type ""
+      mysql_decl ""
+      
+      classrelation 151850 // <generalisation>
+	relation 150058 ---|>
+	  a public
+	    python "${type}"
+	    classrelation_ref 151850 // <generalisation>
+	  b parent class_ref 128810 // PerformanceMeasure
+      end
+
+      classrelation 152106 // <aggregation>
+	relation_ref 150186 // <aggregation>
       end
     end
   end
@@ -523,6 +551,16 @@ ${import}
 ${definition}"
       associated_elems
 	class_ref 128170 // Environment
+      end
+    end
+
+    artifact 142122 "UtilityFunction"
+      stereotype "source"
+      python_src "${comment}
+${import}
+${definition}"
+      associated_elems
+	class_ref 135466 // UtilityFunction
       end
     end
   end

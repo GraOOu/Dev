@@ -2,7 +2,7 @@ format 222
 
 classcanvas 128042 class_ref 128042 // Agent
   classdiagramsettings member_max_width 0 end
-  xyzwh 702 129.2 1995 125 187
+  xyzwh 706 102.2 1995 121 277
 end
 classcanvas 128170 class_ref 128170 // Environment
   classdiagramsettings show_members_full_definition yes member_max_width 0 end
@@ -10,7 +10,7 @@ classcanvas 128170 class_ref 128170 // Environment
 end
 classcanvas 128298 class_ref 128298 // Sensor
   classdiagramsettings member_max_width 0 end
-  xyzwh 553.4 191.2 2000 89 41
+  xyzwh 484.4 193.2 2000 89 41
 end
 classcanvas 128426 class_ref 128426 // Actuator
   classdiagramsettings member_max_width 0 end
@@ -18,7 +18,7 @@ classcanvas 128426 class_ref 128426 // Actuator
 end
 classcanvas 128554 class_ref 128554 // Percept
   classdiagramsettings member_max_width 0 end
-  xyzwh 321.1 193.3 2000 105 41
+  xyzwh 574.1 167.3 2000 105 41
 end
 classcanvas 129194 class_ref 128682 // AgentFunction
   classdiagramsettings member_max_width 0 end
@@ -36,28 +36,27 @@ classcanvas 130346 class_ref 128938 // Action
   xyzwh 321 249 2006 103 41
 end
 note 130858 "<<Observer>>"
-  font small_bold  xyzwh 599 213 2006 85 35
+  font small_bold  xyzwh 683 166 2006 85 35
 note 130986 "<<Command>>"
-  font small_bold  xyzwh 600 295 2000 89 35
+  font small_bold  xyzwh 646 284 2000 89 35
 note 131498 "<<Observer>>"
-  font small_bold  xyzwh 299.5 350.5 2006 85 35
+  font small_bold  xyzwh 293.5 344.5 2006 85 35
 note 131626 "Design & Testing"
   font small_bold  xyzwh 544 57 2000 101 35
+classcanvas 135850 class_ref 135466 // UtilityFunction
+  classdiagramsettings member_max_width 0 end
+  xyzwh 416 384 2000 141 41
+end
 relationcanvas 128682 relation_ref 128042 // <aggregation>
-  decenter_begin 416
+  decenter_begin 393
   decenter_end 414
   from ref 128042 z 2001 to ref 128298
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
 relationcanvas 128810 relation_ref 128170 // <aggregation>
-  decenter_begin 748
+  decenter_begin 610
   from ref 128042 z 2001 to ref 128426
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
-end
-relationcanvas 128938 relation_ref 128298 // <unidirectional association>
-  from ref 128554 z 2001 to ref 128298
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
@@ -72,14 +71,8 @@ relationcanvas 130730 relation_ref 129194 // <aggregation>
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
-relationcanvas 131242 relation_ref 135722 // <unidirectional association>
-  decenter_begin 388
-  from ref 128170 z 2001 to ref 128554
-  no_role_a no_role_b
-  no_multiplicity_a no_multiplicity_b
-end
 relationcanvas 131370 relation_ref 135850 // <aggregation>
-  decenter_begin 200
+  decenter_begin 151
   decenter_end 202
   from ref 128170 z 2001 to ref 128042
   no_role_a no_role_b
@@ -95,12 +88,28 @@ relationcanvas 133930 relation_ref 136234 // <dependency>
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
-relationcanvas 135210 relation_ref 143530 // <aggregation>
-  geometry HVH unfixed
-  decenter_end 796
-  from ref 129450 z 2001 to point 281 325
-  line 135594 z 2001 to point 281 317
-  line 135722 z 2001 to ref 128170
+relationcanvas 135978 relation_ref 150058 // <generalisation>
+  from ref 135850 z 2001 to ref 129450
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 136106 relation_ref 150186 // <aggregation>
+  decenter_begin 898
+  from ref 128042 z 2001 to point 623 350
+  line 136490 z 2001 to point 622 402
+  line 136234 z 2001 to ref 135850
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 136362 relation_ref 150314 // <dependency>
+  decenter_end 391
+  from ref 128298 z 2001 to ref 128170
+  no_role_a no_role_b
+  no_multiplicity_a no_multiplicity_b
+end
+relationcanvas 136618 relation_ref 150442 // <aggregation>
+  decenter_begin 819
+  from ref 128170 z 2001 to ref 129450
   no_role_a no_role_b
   no_multiplicity_a no_multiplicity_b
 end
