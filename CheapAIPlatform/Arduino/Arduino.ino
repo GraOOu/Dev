@@ -13,6 +13,13 @@ bool _isFutherTest = false;
 const int trigPin = 9;
 const int echoPin = 10;
 
+// RF receiver
+
+const int frontPin = A4;
+const int backPin  = A5;
+const int rightPin = A0;
+const int leftPin  = A1;
+
 void setup ( ) 
 {
   // Connexion PC
@@ -28,6 +35,14 @@ void setup ( )
 
   digitalWrite ( trigPin, LOW );
 
+  // RF receiver
+/*
+  pinMode ( frontPin, INPUT ); 
+  pinMode ( backPin,  INPUT  );
+
+  pinMode ( rightPin, INPUT ); 
+  pinMode ( leftPin,  INPUT  );
+*/
   Serial.println ( "Setup done..." ); 
   
   // InitTimersSafe ( ); 
@@ -105,8 +120,8 @@ int CollisionDetection ( )
   float distance = duration* SOUND_SPEED/ 2;
   
   // Prints the distance on the Serial Monitor
-  Serial.print ( "Distance: " );
-  Serial.println ( distance );
+  // Serial.print ( "Distance: " );
+  // Serial.println ( distance );
 
   return distance;
 }
@@ -114,68 +129,48 @@ int CollisionDetection ( )
 // Little car gameplay --------------------------------------------------------------------
 
 #define __Motor_Left__      0
-#define __Motor_Right__     1
-#define __Motor_Front__     2
-#define __Motor_Rear__      3
-
-#define  __RadioCmdTreshold__ 620
-
-#define  __FrontBackLine__  A3
-#define  __RightLeftLine__  A2
+#define __Motor_Right__     2
+#define __Motor_Front__     4
+#define __Motor_Rear__      8
 
 #define  __NoDetection__    9
 
 int    _currentDir   = __NoDetection__;
 
-#define __RadioCmd_Latency__      250 // ms
+int    _AnalogThreshold = 1000;
 
-int   latencyLCGA  = __RadioCmd_Latency__;
-
-int initialisationLatencyRatio = 32;
-
-bool LittleCarGameplayAttitude ( int period  )
+bool LittleCarGameplayAttitude ( )
 {
   int newDir = __NoDetection__;
   
   //  ---
   
-  // Latency
+  int frontPinState = analogRead ( frontPin );
+  int backPinState  = analogRead ( backPin );
+  int rightPinState = analogRead ( rightPin );
+  int leftPinState  = analogRead ( leftPin );
   
-  if ( latencyLCGA > period ) 
-  {
-       latencyLCGA -= period;
-    return false;
-  }
-  latencyLCGA = 0;
-  
-  //  ---
-  
-  int FBValue = analogRead ( __FrontBackLine__ );
-  
-  if ( FBValue  <= 10 )
+  if ( frontPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Front__;
     // DisplayInfo ( String ( FBValue ).c_str ( ) );
     Serial.println ( "Front" );
   }
   
-  if ( FBValue >= __RadioCmdTreshold__ )
+  if ( backPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Rear__;
     Serial.println ( "Back" );
   }
  
-  int RLValue = analogRead ( __RightLeftLine__ );
-  
-  if ( RLValue >= __RadioCmdTreshold__ )
+  if ( rightPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Right__;
     Serial.println ( "Right" );
   }
   
-  if ( RLValue <= 10 )
+  if ( leftPinState >= _AnalogThreshold )
   {
-    
     newDir = __Motor_Left__;
     Serial.println ( "Left" );
   }  
@@ -193,12 +188,11 @@ bool LittleCarGameplayAttitude ( int period  )
   {
     Serial.println ( "New Command" ); 
     _currentDir   = newDir;
-    
   }
     
   // Translate to engine
   
-  DisplayInfo ( "Action" );
+  // DisplayInfo ( "Action" );
 
   return true;
 }
@@ -226,12 +220,7 @@ void loop ( )
     CollisionDetection ( );
   
     // Cmd RadioCmd
-  
-    // if ( !LittleCarGameplayAttitude ( ( int ) _period ) )
-    {
-        // Command
-  
-    }
+    LittleCarGameplayAttitude ( );
   }
   
   // ---
