@@ -3,6 +3,9 @@
 #include "Utils.h"
 #include "Meas.h"
 
+#include <AFMotor.h>
+
+AF_DCMotor motor(1);
 
 // INIT  --------------------------------------------------------------------------------
 
@@ -35,14 +38,11 @@ void setup ( )
 
   digitalWrite ( trigPin, LOW );
 
-  // RF receiver
-/*
-  pinMode ( frontPin, INPUT ); 
-  pinMode ( backPin,  INPUT  );
+  // Motor Shield
 
-  pinMode ( rightPin, INPUT ); 
-  pinMode ( leftPin,  INPUT  );
-*/
+  motor.setSpeed ( 200 );
+  motor.run ( RELEASE );
+
   Serial.println ( "Setup done..." ); 
   
   // InitTimersSafe ( ); 
@@ -117,7 +117,7 @@ int CollisionDetection ( )
   long duration = pulseIn ( echoPin, HIGH, MEASURE_TIMEOUT );
   
   // Calculating the distance
-  float distance = duration* SOUND_SPEED/ 2;
+  float distance = duration* SOUND_SPEED / 2;
   
   // Prints the distance on the Serial Monitor
   // Serial.print ( "Distance: " );
@@ -155,12 +155,18 @@ bool LittleCarGameplayAttitude ( )
     newDir = __Motor_Front__;
     // DisplayInfo ( String ( FBValue ).c_str ( ) );
     Serial.println ( "Front" );
+
+    motor.run ( FORWARD );
+    motor.setSpeed ( 200 );
   }
-  
+
   if ( backPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Rear__;
     Serial.println ( "Back" );
+
+    motor.run ( BACKWARD );
+    motor.setSpeed ( 200 );
   }
  
   if ( rightPinState >= _AnalogThreshold )
@@ -179,8 +185,12 @@ bool LittleCarGameplayAttitude ( )
   
   if ( newDir == __NoDetection__ ) 
   {
+    motor.run ( RELEASE );
+    motor.setSpeed ( 0 );
     return false;
   }  
+
+  delay(100);
   
   // New cmd stop first
     
