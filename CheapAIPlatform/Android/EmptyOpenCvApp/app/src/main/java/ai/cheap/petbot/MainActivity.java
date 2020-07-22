@@ -11,6 +11,9 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -99,7 +102,14 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void onCameraViewStopped() {
     }
 
-    public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        return inputFrame.rgba();
+    public Mat onCameraFrame ( CvCameraViewFrame inputFrame ) {
+
+        Mat mat = inputFrame.rgba ( );
+
+        // Debug Text
+        Imgproc.putText ( mat,"GraOOu", new Point(10,50),0,1.5
+                        , new Scalar(0,255,0),3);
+
+        return mat;
     }
 }
