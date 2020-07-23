@@ -12,6 +12,9 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 // Usb Serial
 
@@ -73,15 +76,15 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             }
         }
     };
-    /*
+
 	// UsbSerial
 	
 	private UsbService usbService;
-	*/
+
+    public static String UglyFeedBack = "GraOOu";
 	/*
      * Notifications from UsbService will be received here.
      */
-	/*
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -104,10 +107,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             }
         }
     };
-    */
 
-	/*
     private MyHandler mHandler;
+
+
     private final ServiceConnection usbConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName arg0, IBinder arg1) {
@@ -120,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             usbService = null;
         }
     };
-    */
+
 
     public MainActivity() {
         Log.i(TAG, "Instantiated new " + this.getClass());
@@ -141,14 +144,6 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView.setCvCameraViewListener(this);
 
-        /*
-
-		if (usbService != null) { // if UsbService was correctly binded, Send data
-			usbService.write ( new byte[] { 'f' } );
-        }
-
-         */
-
     }
 
 	@Override
@@ -162,10 +157,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             Log.d(TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
-		/*
+
 		setFilters();  // Start listening notifications from UsbService
         startService(UsbService.class, usbConnection, null); // Start UsbService(if it was not started before) and Bind it
-        */
+
     }
 
     @Override
@@ -174,13 +169,11 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         super.onPause();
         if (mOpenCvCameraView != null)
             mOpenCvCameraView.disableView();
-		/*
+
 		unregisterReceiver(mUsbReceiver);
         unbindService(usbConnection);
-        */
-    }
 
-    
+    }
 
     public void onDestroy() {
         super.onDestroy();
@@ -194,11 +187,22 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     public void onCameraViewStopped() {
     }
 
+
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        return inputFrame.rgba();
+        Mat mat = inputFrame.rgba ( );
+
+        // Debug Text
+        Imgproc.putText ( mat, UglyFeedBack, new Point(10,50),0,1.5
+                , new Scalar(0,255,0),3);
+
+        if (usbService != null) { // if UsbService was correctly binded, Send data
+            usbService.write ( new byte[] { 'f', '\r', '\n' } );
+        }
+
+        return mat;
     }
 
-    /*
+
 	private void startService(Class<?> service, ServiceConnection serviceConnection, Bundle extras) {
         if (!UsbService.SERVICE_CONNECTED) {
             Intent startService = new Intent(this, service);
@@ -223,13 +227,12 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         filter.addAction(UsbService.ACTION_USB_NOT_SUPPORTED);
         filter.addAction(UsbService.ACTION_USB_PERMISSION_NOT_GRANTED);
 
-        //registerReceiver(mUsbReceiver, filter);
+        registerReceiver(mUsbReceiver, filter);
     }
-	*/
+
 	/*
      * This handler will be passed to UsbService. Data received from serial port is displayed through this handler
      */
-	/*
     private static class MyHandler extends Handler {
         private final WeakReference<MainActivity> mActivity;
 
@@ -242,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             switch (msg.what) {
                 case UsbService.MESSAGE_FROM_SERIAL_PORT:
                     String data = (String) msg.obj;
+                    UglyFeedBack = data;
                     Toast.makeText(mActivity.get(), data,Toast.LENGTH_LONG).show();
                     break;
                 case UsbService.CTS_CHANGE:
@@ -252,5 +256,5 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
                     break;
             }
         }
-    }*/
+    }
 }
