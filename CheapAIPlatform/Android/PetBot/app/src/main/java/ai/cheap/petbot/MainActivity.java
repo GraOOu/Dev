@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
             switch (msg.what) {
                 case UsbService.MESSAGE_FROM_SERIAL_PORT:
                     String data = (String) msg.obj;
+                    // Seems not working ...
                     UglyFeedBack = data;
                     Toast.makeText(mActivity.get(), data,Toast.LENGTH_LONG).show();
                     break;
