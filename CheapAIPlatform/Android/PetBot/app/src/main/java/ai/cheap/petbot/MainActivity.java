@@ -59,6 +59,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
     private boolean              mIsJavaCamera = true;
     private MenuItem             mItemSwitchCamera = null;
 
+    // Small Automat
+    private String[] commands = new String[] { "S\r\n", "A\r\n", "F\r\n", "L\r\n", "R\r\n", "A\r\n", "S\r\n", "B\r\n" };
+    private int nextStepThreshold = 60;
+    private int step = 0;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -192,12 +196,23 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         Mat mat = inputFrame.rgba ( );
 
         // Debug Text
+        /*
         Imgproc.putText ( mat, UglyFeedBack, new Point(10,50),0,1.5
                 , new Scalar(0,255,0),3);
+        */
+        String cmd = "Grrr!!!";
 
         if (usbService != null) { // if UsbService was correctly binded, Send data
-            usbService.write ( new byte[] { 'f', '\r', '\n' } );
+
+            step++;
+            int cmdIdx = ( step / nextStepThreshold ) % commands.length;
+            cmd = commands [ cmdIdx ];
+
+            usbService.write ( cmd.getBytes ( ) );
         }
+        // Debug Text
+        Imgproc.putText ( mat, cmd.trim(), new Point(10,50),0,1.5
+                , new Scalar(0,255,0),3);
 
         return mat;
     }

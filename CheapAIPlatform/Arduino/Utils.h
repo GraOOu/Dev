@@ -115,6 +115,7 @@ bool getLine ( )
     {
       receivedChars [ ndx ] = '\0'; // terminate the string
       ndx = 0;
+      
       return true;
     }
   }

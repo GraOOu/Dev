@@ -21,14 +21,17 @@ class MotorShield
 
       Motor ( )
       {
-        motorFbFront = new AF_DCMotor ( 1 );
-        motorFbBack  = new AF_DCMotor ( 2 );
-
-        motorRl = new AF_DCMotor ( 3 );
+        
+        
       }
       
       void Init ( )
       {
+        motorFbFront = new AF_DCMotor ( 3 );
+        motorFbBack  = new AF_DCMotor ( 1 );
+
+        motorRl = new AF_DCMotor ( 4 );
+        
         motorFbFront->setSpeed ( 0 );
         motorFbFront->run ( RELEASE );
 
@@ -42,19 +45,19 @@ class MotorShield
       void Foward ( )
       {
         motorFbFront->run ( FORWARD );
-        motorFbFront->setSpeed ( 200 );
+        motorFbFront->setSpeed ( 250 );
 
         motorFbBack->run ( FORWARD );
-        motorFbBack->setSpeed ( 200 );
+        motorFbBack->setSpeed ( 250 );
       }
 
       void Backward ( )
       {
         motorFbFront->run ( BACKWARD );
-        motorFbFront->setSpeed ( 200 );
+        motorFbFront->setSpeed ( 250 );
 
         motorFbBack->run ( BACKWARD );
-        motorFbBack->setSpeed ( 200 );
+        motorFbBack->setSpeed ( 250 );
       }
 
       void Stop ( )
@@ -69,13 +72,13 @@ class MotorShield
       void Left ( )
       {
         motorRl->run ( FORWARD );
-        motorRl->setSpeed ( 200 );
+        motorRl->setSpeed ( 250 );
       }
 
       void Right ( )
       {
         motorRl->run ( BACKWARD );
-        motorRl->setSpeed ( 200 );
+        motorRl->setSpeed ( 250 );
       }
 
       void Ahead ( )

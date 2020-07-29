@@ -3,11 +3,9 @@
 #include "Utils.h"
 #include "Meas.h"
 
-#include <AFMotor.h>
+#include "MotorShield.h"
 
-AF_DCMotor motor(1);
-
-// INIT  --------------------------------------------------------------------------------
+// Init  --------------------------------------------------------------------------------
 
 bool _isFutherTest = false;
 
@@ -22,6 +20,27 @@ const int frontPin = A4;
 const int backPin  = A5;
 const int rightPin = A0;
 const int leftPin  = A1;
+
+// Motor
+
+MotorShield motor = MotorShield ( );
+
+// Direction
+
+#define __Motor_Left__      0
+#define __Motor_Right__     2
+#define __Motor_Front__     4
+#define __Motor_Rear__      8
+
+#define __Motor_Stop__     16
+#define __Motor_Ahead__    32
+
+#define  __NoDetection__  512
+
+int newDir = __NoDetection__;
+int _currentDir   = __NoDetection__;
+
+// Init ---------------------------------------------------------------------------------
 
 void setup ( ) 
 {
@@ -40,14 +59,12 @@ void setup ( )
 
   // Motor Shield
 
-  motor.setSpeed ( 200 );
-  motor.run ( RELEASE );
+  motor.Init ( );
 
   Serial.println ( "Setup done..." ); 
   
   // InitTimersSafe ( ); 
 }
-
 
 // Serial Command Handling ---------------------------------------------------------------------------------
 
@@ -55,34 +72,48 @@ char* info = "Grrr!!!";
 
 void SerialCmdHandling ( )
 {
-  int received;
+  String received;
 
   // Serial.println ( info ); 
 
   if ( getLine ( ) )
   {
-    received = receivedChars [ 0 ];
+    received = String ( receivedChars );
     
-    if ( received == 'f' ) 
+    if ( received.indexOf ( 'F' ) >= 0 ) 
     {
-        // double speed = atof ( &( receivedChars [ 1 ] ) );
-      
+        newDir = __Motor_Front__;
         info = "Motor Foward !";
      }
 
-    if ( received == 'b' ) 
+    if ( received.indexOf ( 'B' ) >= 0 )
     {
+        newDir = __Motor_Rear__;
         info = "Motor Back !";
     }
-    
-    if ( received == 'l' ) 
+
+    if ( received.indexOf ( 'R' ) >= 0 )
     {
-        info = "Motor Left !";
+        newDir = __Motor_Right__;
+        info = "Motor Right !";
     }
     
-    if ( received == 'r' ) 
+    if ( received.indexOf ( 'L' ) >= 0 )
     {
-        info = "Motor Right !";
+        newDir = __Motor_Left__;
+        info = "Motor Left !";
+    }
+
+    if ( received.indexOf ( 'S' ) >= 0 )
+    {
+        newDir = __Motor_Stop__;
+        info = "Motor Stop";
+    }
+
+    if ( received.indexOf ( 'A' ) >= 0 )
+    {
+        newDir = __Motor_Ahead__;
+        info = "Motor Ahead";
     }
     
     if ( received == 'i' ) 
@@ -90,15 +121,9 @@ void SerialCmdHandling ( )
         displayInfo = !displayInfo;
     }
     
-    if ( received == 's' ) 
-    {
-        info = "Motor Stop";
-    }
-
-    Serial.println ( info ); 
+    // Serial.println ( info ); 
   }  
 }
-
 
 // Ultrasonic Sensor HC-SR04 --------------------------------------------------------------------
 
@@ -128,21 +153,10 @@ int CollisionDetection ( )
 
 // Little car gameplay --------------------------------------------------------------------
 
-#define __Motor_Left__      0
-#define __Motor_Right__     2
-#define __Motor_Front__     4
-#define __Motor_Rear__      8
+int _AnalogThreshold = 1000;
 
-#define  __NoDetection__    9
-
-int    _currentDir   = __NoDetection__;
-
-int    _AnalogThreshold = 1000;
-
-bool LittleCarGameplayAttitude ( )
+bool RcCmdHandling ( )
 {
-  int newDir = __NoDetection__;
-  
   //  ---
   
   int frontPinState = analogRead ( frontPin );
@@ -153,53 +167,27 @@ bool LittleCarGameplayAttitude ( )
   if ( frontPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Front__;
-    // DisplayInfo ( String ( FBValue ).c_str ( ) );
-    Serial.println ( "Front" );
-
-    motor.run ( FORWARD );
-    motor.setSpeed ( 200 );
+    Serial.println ( "F" );
   }
 
   if ( backPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Rear__;
-    Serial.println ( "Back" );
-
-    motor.run ( BACKWARD );
-    motor.setSpeed ( 200 );
+    Serial.println ( "B" );    
   }
  
   if ( rightPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Right__;
-    Serial.println ( "Right" );
+    Serial.println ( "R" );    
   }
   
   if ( leftPinState >= _AnalogThreshold )
   {
     newDir = __Motor_Left__;
-    Serial.println ( "Left" );
+    Serial.println ( "L" );    
   }  
   
-  // No Cmd
-  
-  if ( newDir == __NoDetection__ ) 
-  {
-    motor.run ( RELEASE );
-    motor.setSpeed ( 0 );
-    return false;
-  }  
-
-  delay(100);
-  
-  // New cmd stop first
-    
-  if ( newDir != _currentDir ) 
-  {
-    Serial.println ( "New Command" ); 
-    _currentDir   = newDir;
-  }
-    
   // Translate to engine
   
   // DisplayInfo ( "Action" );
@@ -209,9 +197,9 @@ bool LittleCarGameplayAttitude ( )
 
 // Main ---------------------------------------------------------------------------------
 
-unsigned long _period         = 20;
+unsigned long _period         = 100;
 unsigned long _prevMillis     = -1;
-unsigned long _meanDelay      = 20;
+unsigned long _meanDelay      = 100;
 unsigned long _delayStability = 8;
 
 void loop ( ) 
@@ -222,6 +210,8 @@ void loop ( )
 
   // DisplayInfo ( "☻" );
 
+  // newDir = __NoDetection__;
+
   {
     // Serial Cmd
     SerialCmdHandling ( );
@@ -230,22 +220,79 @@ void loop ( )
     CollisionDetection ( );
   
     // Cmd RadioCmd
-    LittleCarGameplayAttitude ( );
+    RcCmdHandling ( );
+  }
+
+  if ( newDir != _currentDir ) 
+  {
+    // Execute resulting command
+
+    if ( newDir == __Motor_Front__ ) 
+    {
+      motor.Foward ( );
+    }
+
+    if ( newDir == __Motor_Rear__ ) 
+    {
+      motor.Backward ( );
+    }
+
+    if ( newDir == __Motor_Right__ ) 
+    {
+      motor.Right ( );
+    }
+
+    if ( newDir == __Motor_Left__ ) 
+    {
+      motor.Left ( );
+    }
+
+    if ( newDir == __Motor_Stop__ ) 
+    {
+      motor.Stop ( );
+    }
+
+    if ( newDir == __Motor_Ahead__ ) 
+    {
+      motor.Ahead ( );
+    }
+
+    
+    // No Cmd
+    /*
+    if ( newDir == __NoDetection__ ) 
+    {
+      motor.Stop ( );
+      motor.Ahead ( );
+    
+      // return false;
+    } 
+    */ 
+  
+    // New cmd stop first
+    
+    // if ( newDir != _currentDir ) 
+    {
+      // Serial.println ( "New Command" ); 
+      _currentDir = newDir;
+    }
+    
   }
   
   // ---
 
-  // Régulation temps réel
-  // Echec au bout de 50 jours de temps de fonctionnement
+  // RT regulation
+  // Fail after 50 days
   
   unsigned long now = millis ( );
   if ( _prevMillis == -1 ) _prevMillis = now;
   unsigned long timePerf = now - _prevMillis;
-  _prevMillis = now;
   
    _meanDelay = ( _meanDelay * _delayStability + ( _period - timePerf ) ) / ( _delayStability + 1 );
 
   if ( _meanDelay < _period ) delay ( _meanDelay );
+
+  _prevMillis = millis ( );
   
   if ( timePerf > _period ) 
   {
