@@ -45,19 +45,19 @@ class MotorShield
       void Foward ( )
       {
         motorFbFront->run ( FORWARD );
-        motorFbFront->setSpeed ( 250 );
+        motorFbFront->setSpeed ( 255 );
 
         motorFbBack->run ( FORWARD );
-        motorFbBack->setSpeed ( 250 );
+        motorFbBack->setSpeed ( 255 );
       }
 
       void Backward ( )
       {
         motorFbFront->run ( BACKWARD );
-        motorFbFront->setSpeed ( 250 );
+        motorFbFront->setSpeed ( 255 );
 
         motorFbBack->run ( BACKWARD );
-        motorFbBack->setSpeed ( 250 );
+        motorFbBack->setSpeed ( 255 );
       }
 
       void Stop ( )
@@ -72,13 +72,13 @@ class MotorShield
       void Left ( )
       {
         motorRl->run ( FORWARD );
-        motorRl->setSpeed ( 250 );
+        motorRl->setSpeed ( 255 );
       }
 
       void Right ( )
       {
         motorRl->run ( BACKWARD );
-        motorRl->setSpeed ( 250 );
+        motorRl->setSpeed ( 255 );
       }
 
       void Ahead ( )

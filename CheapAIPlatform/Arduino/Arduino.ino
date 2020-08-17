@@ -27,7 +27,7 @@ MotorShield motor = MotorShield ( );
 
 // Direction
 
-#define __Motor_Left__      0
+#define __Motor_Left__      1
 #define __Motor_Right__     2
 #define __Motor_Front__     4
 #define __Motor_Rear__      8
@@ -79,40 +79,43 @@ void SerialCmdHandling ( )
   if ( getLine ( ) )
   {
     received = String ( receivedChars );
+
+    // Reset Steering
+    newDir = 0;
     
     if ( received.indexOf ( 'F' ) >= 0 ) 
     {
-        newDir = __Motor_Front__;
+        newDir |= __Motor_Front__;
         info = "Motor Foward !";
      }
 
     if ( received.indexOf ( 'B' ) >= 0 )
     {
-        newDir = __Motor_Rear__;
+        newDir |= __Motor_Rear__;
         info = "Motor Back !";
     }
 
     if ( received.indexOf ( 'R' ) >= 0 )
     {
-        newDir = __Motor_Right__;
+        newDir |= __Motor_Right__;
         info = "Motor Right !";
     }
     
     if ( received.indexOf ( 'L' ) >= 0 )
     {
-        newDir = __Motor_Left__;
+        newDir |= __Motor_Left__;
         info = "Motor Left !";
     }
 
     if ( received.indexOf ( 'S' ) >= 0 )
     {
-        newDir = __Motor_Stop__;
+        newDir |= __Motor_Stop__;
         info = "Motor Stop";
     }
 
     if ( received.indexOf ( 'A' ) >= 0 )
     {
-        newDir = __Motor_Ahead__;
+        newDir |= __Motor_Ahead__;
         info = "Motor Ahead";
     }
     
@@ -153,7 +156,12 @@ int CollisionDetection ( )
 
 // Little car gameplay --------------------------------------------------------------------
 
+// Remote command doesn't have the Ahead or Stop button
+// To handle this it is needed to reset the steering after a short latency
+
 int _AnalogThreshold = 1000;
+int _ResetSteeringLatency = 5; // number of loop
+int _NextResetSteeringCounter = -1;
 
 bool RcCmdHandling ( )
 {
@@ -166,31 +174,39 @@ bool RcCmdHandling ( )
   
   if ( frontPinState >= _AnalogThreshold )
   {
-    newDir = __Motor_Front__;
+    newDir |= __Motor_Front__;
     Serial.println ( "F" );
+    _NextResetSteeringCounter = _ResetSteeringLatency;
   }
 
   if ( backPinState >= _AnalogThreshold )
   {
-    newDir = __Motor_Rear__;
-    Serial.println ( "B" );    
+    newDir |= __Motor_Rear__;
+    Serial.println ( "B" );
+    _NextResetSteeringCounter = _ResetSteeringLatency;
   }
  
   if ( rightPinState >= _AnalogThreshold )
   {
-    newDir = __Motor_Right__;
+    newDir |= __Motor_Right__;
     Serial.println ( "R" );    
+    _NextResetSteeringCounter = _ResetSteeringLatency;
   }
   
   if ( leftPinState >= _AnalogThreshold )
   {
-    newDir = __Motor_Left__;
+    newDir |= __Motor_Left__;
     Serial.println ( "L" );    
+    _NextResetSteeringCounter = _ResetSteeringLatency;
   }  
   
-  // Translate to engine
-  
-  // DisplayInfo ( "Action" );
+  // Handle Reset Steering
+
+  _NextResetSteeringCounter--;
+  if ( _NextResetSteeringCounter = 0 )
+  {
+    newDir = __Motor_Stop__ | __Motor_Ahead__;
+  } 
 
   return true;
 }
@@ -227,32 +243,32 @@ void loop ( )
   {
     // Execute resulting command
 
-    if ( newDir == __Motor_Front__ ) 
+    if ( newDir & __Motor_Front__ ) 
     {
       motor.Foward ( );
     }
 
-    if ( newDir == __Motor_Rear__ ) 
+    if ( newDir & __Motor_Rear__ ) 
     {
       motor.Backward ( );
     }
 
-    if ( newDir == __Motor_Right__ ) 
+    if ( newDir & __Motor_Right__ ) 
     {
       motor.Right ( );
     }
 
-    if ( newDir == __Motor_Left__ ) 
+    if ( newDir & __Motor_Left__ ) 
     {
       motor.Left ( );
     }
 
-    if ( newDir == __Motor_Stop__ ) 
+    if ( newDir & __Motor_Stop__ ) 
     {
       motor.Stop ( );
     }
 
-    if ( newDir == __Motor_Ahead__ ) 
+    if ( newDir & __Motor_Ahead__ ) 
     {
       motor.Ahead ( );
     }
