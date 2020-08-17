@@ -160,8 +160,12 @@ int CollisionDetection ( )
 // To handle this it is needed to reset the steering after a short latency
 
 int _AnalogThreshold = 1000;
-int _ResetSteeringLatency = 5; // number of loop
+int _ResetSteeringLatencyFB = 5; // number of loop
+int _ResetSteeringLatencyLR = 2; // number of loop
 int _NextResetSteeringCounter = -1;
+
+int _ResetState = 0;
+int _ReinitializeState = -1;
 
 bool RcCmdHandling ( )
 {
@@ -176,37 +180,42 @@ bool RcCmdHandling ( )
   {
     newDir |= __Motor_Front__;
     Serial.println ( "F" );
-    _NextResetSteeringCounter = _ResetSteeringLatency;
+    _NextResetSteeringCounter = _ResetSteeringLatencyFB;
   }
 
   if ( backPinState >= _AnalogThreshold )
   {
     newDir |= __Motor_Rear__;
     Serial.println ( "B" );
-    _NextResetSteeringCounter = _ResetSteeringLatency;
+    _NextResetSteeringCounter = _ResetSteeringLatencyFB;
   }
  
   if ( rightPinState >= _AnalogThreshold )
   {
     newDir |= __Motor_Right__;
     Serial.println ( "R" );    
-    _NextResetSteeringCounter = _ResetSteeringLatency;
+    _NextResetSteeringCounter = _ResetSteeringLatencyLR;
   }
   
   if ( leftPinState >= _AnalogThreshold )
   {
     newDir |= __Motor_Left__;
     Serial.println ( "L" );    
-    _NextResetSteeringCounter = _ResetSteeringLatency;
+    _NextResetSteeringCounter = _ResetSteeringLatencyLR;
   }  
   
   // Handle Reset Steering
 
   _NextResetSteeringCounter--;
-  if ( _NextResetSteeringCounter = 0 )
+  if ( _NextResetSteeringCounter == _ResetState )
   {
     newDir = __Motor_Stop__ | __Motor_Ahead__;
+    Serial.println ( "AS" );    
   } 
+  if ( _NextResetSteeringCounter == _ReinitializeState )
+  {
+    newDir = 0;
+  }
 
   return true;
 }
@@ -245,7 +254,7 @@ void loop ( )
 
     if ( newDir & __Motor_Front__ ) 
     {
-      motor.Foward ( );
+      motor.Foward ( );  
     }
 
     if ( newDir & __Motor_Rear__ ) 
