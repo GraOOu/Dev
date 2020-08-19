@@ -28,9 +28,9 @@ class MotorShield
       void Init ( )
       {
         motorFbFront = new AF_DCMotor ( 3 );
-        motorFbBack  = new AF_DCMotor ( 1 );
+        motorFbBack  = new AF_DCMotor ( 4 );
 
-        motorRl = new AF_DCMotor ( 4 );
+        motorRl = new AF_DCMotor ( 2 );
         
         motorFbFront->setSpeed ( 0 );
         motorFbFront->run ( RELEASE );
