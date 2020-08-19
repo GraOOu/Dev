@@ -84,7 +84,7 @@
 
 		<h2>Hack</h2>
 
-		<img src="Image/XL932R4_TopSide.jpeg"  width="800" />
+		<img src="Image/XL932R4_TopSide.jpeg"  width="600" />
 
 		<p>
 			The car uses a XL932R4 Rf receiver, if the right, left, front and back output
@@ -92,18 +92,97 @@
 			These outputs drive power to the engine are not suitable with the arduino. 
 		</p>
 
-		<img src="Image/CmdAnalysis.jpg"  width="800" />
+		<h3>Hack (for professional solders)</h3>
+
+		<img src="Image/CmdAnalysis.jpg"  width="400" />
 
 		<p>
 			To detected the command pin that we can derive to use the arduino, put a 
 			crocodile plug on the mass and test the voltage on Pins while you set a command.  
 		</p>
 
-		<img src="Image/XL932R4.jpg" 	  width="800" />
-		<img src="Image/XL932R4_Hack.jpg" width="800" />
+		<img src="Image/XL932R4.jpg" 	  width="400" />
+		<img src="Image/XL932R4_Hack.jpg" width="400" />
 
 		<p>
 			Here the map for hacking the receiver.  
 		</p>
+
+		<h3>Hack</h3>
+
+		<p>
+			As soldering on the receiver card looks tedious to achieve, an other approach is possible.
+			the receiver of the car handles two features:
+		</p>
+
+		<ul>
+			<li>Receive remote commands.</li>
+			<li>Drive the power from the batterie to the motors.</li>
+		</ul>
+
+		<p>
+			It is possible to use the receiver, only to handles remote commands,
+			and use a third party motor driver to control the power.
+			The receiver will be plug to the arduino board, and this one 
+			will control motor driver.
+		</p>
+
+		<img src="Image/cutReceiver.jpg" 	  width="400" />
+		<img src="Image/wireReceiver.jpg" 	  width="400" />
+		<img src="Image/solerReceiver.jpg" 	  width="400" />
+
+		<p>
+			To do this unplug the motor from the Rf receiver, cut the 2 wire from the battery,
+			and solder two longer wire compatible with an Arduino.
+
+			Do the same with the battery.
+		</p>
+
+		<h3>Wiring on the Arduino</h3>
+
+		<ul>
+			<li>Replace the battery connexion of the Rf Receiver with the 5V and grd of the Arduino.</li>
+			<li>Plug 2 wires for Rigth and Left to the A0 and A1 pin of the Arduino.</li>
+			<li>Plug 2 wires for Front and Back to the A4 and A5 pin of the Arduino.</li>
+		</ul>
+
+		<h2>Setup the Motor Shield</h2>
+
+		<img src="Image/MotorShield.png" 	  width="400" />
+		
+		<p>Generic shield (two L293D motor driver chips) with 4 outputs:</p>
+
+		<ul>
+			<li>2 motors for foward and backward direction.</li>
+			<li>1 motors for steering, left and right direction.</li>
+		</ul>
+
+		<h3>Tips</h3>
+
+		<p>
+			In order to easily test the driver, screw 2 leds (5V or 12V) with opposite connector at each motor output.
+			Connecting a voltmeter count be a great idea too.
+		</p>
+		
+		<h3>Wiring</h3>
+
+		<img src="Image/PinLayout.png" 	  width="600" />
+		<img src="Image/MotorShieldWiring.jpg" 	  width="400" />
+
+		<ul>
+			<li>Connect 5V and Two Grd to power the shield logic.</li>
+			<li>Connect the Following digital Pin to the shield: #3, #4, #5, #6, #7, #8, #11, #12.</li>
+			<li>Connect Rx/Tx pins.</li>
+			<li>Connect the motors for front and back on the motor outputs 3 and 4.</li>
+			<li>Connect the motor for right and left on the motor output 2.</li>
+		</ul>
+
+		<h2>Ultrasonic Sensor</h2>
+
+		<p>
+			const int trigPin = 9;
+			const int echoPin = 10;
+		</p>
+
 
 </body>
