@@ -6,10 +6,19 @@ import java.util.List;
 public class ReplayerController extends Controller {
 
     List<String> commands = new ArrayList<String>();
+
+    boolean recordActivated = false;
     boolean replayActivated = false;
+
     int step = 0;
 
     public void Update ( ParamContainer params ) {
+
+        if ( params.Cmd.contains ( "F" ) )
+        {
+            recordActivated = true;
+            return;
+        }
 
         if ( params.Cmd.contains ( "B" ) )
         {
@@ -23,7 +32,10 @@ public class ReplayerController extends Controller {
             params.Cmd = commands.get(step);
             return;
         }
-        
-        commands.add(params.Cmd);
+
+        if ( recordActivated )
+        {
+            commands.add(params.Cmd);
+        }
     }
 }

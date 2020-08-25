@@ -160,12 +160,8 @@ int CollisionDetection ( )
 // To handle this it is needed to reset the steering after a short latency
 
 int _AnalogThreshold = 1000;
-int _ResetSteeringLatencyFB = 5; // number of loop
-int _ResetSteeringLatencyLR = 2; // number of loop
-int _NextResetSteeringCounter = -1;
-
-int _ResetState = 0;
-int _ReinitializeState = -1;
+bool _RcCommandGiven = false;
+bool _RLCommandGiven = false;
 
 bool RcCmdHandling ( )
 {
@@ -175,46 +171,62 @@ bool RcCmdHandling ( )
   int backPinState  = analogRead ( backPin );
   int rightPinState = analogRead ( rightPin );
   int leftPinState  = analogRead ( leftPin );
+
+  // Handle Reset Steering
+
+  
+   int nextDir = 0;
+   // Todo
+   // Serial.println ( "AS" );    
+  
   
   if ( frontPinState >= _AnalogThreshold )
   {
-    newDir |= __Motor_Front__;
+    nextDir |= __Motor_Front__;
     Serial.println ( "F" );
-    _NextResetSteeringCounter = _ResetSteeringLatencyFB;
+    _RcCommandGiven = true;
   }
 
   if ( backPinState >= _AnalogThreshold )
   {
-    newDir |= __Motor_Rear__;
+    nextDir |= __Motor_Rear__;
     Serial.println ( "B" );
-    _NextResetSteeringCounter = _ResetSteeringLatencyFB;
+    _RcCommandGiven = true;
   }
  
   if ( rightPinState >= _AnalogThreshold )
   {
-    newDir |= __Motor_Right__;
+    nextDir |= __Motor_Right__;
     Serial.println ( "R" );    
-    _NextResetSteeringCounter = _ResetSteeringLatencyLR;
+    _RLCommandGiven = true;
   }
   
   if ( leftPinState >= _AnalogThreshold )
   {
-    newDir |= __Motor_Left__;
+    nextDir |= __Motor_Left__;
     Serial.println ( "L" );    
-    _NextResetSteeringCounter = _ResetSteeringLatencyLR;
+    _RLCommandGiven = true;
   }  
   
-  // Handle Reset Steering
+  if ( _RcCommandGiven && ( nextDir == 0 ) )
+  {
+    newDir = __Motor_Stop__;
+    Serial.println ( "S" ); 
+    _RcCommandGiven = false;
+    return true;
+  }
 
-  _NextResetSteeringCounter--;
-  if ( _NextResetSteeringCounter == _ResetState )
+  if ( _RLCommandGiven && ( nextDir == 0 ) )
   {
-    newDir = __Motor_Stop__ | __Motor_Ahead__;
-    Serial.println ( "AS" );    
-  } 
-  if ( _NextResetSteeringCounter == _ReinitializeState )
+    newDir = __Motor_Ahead__;
+    Serial.println ( "A" ); 
+    _RLCommandGiven = false;
+    return true;
+  }
+  
+  if ( nextDir != 0 )
   {
-    newDir = 0;
+    newDir = nextDir;
   }
 
   return true;
@@ -222,9 +234,9 @@ bool RcCmdHandling ( )
 
 // Main ---------------------------------------------------------------------------------
 
-unsigned long _period         = 100;
+unsigned long _period         = 50;
 unsigned long _prevMillis     = -1;
-unsigned long _meanDelay      = 100;
+unsigned long _meanDelay      = 50;
 unsigned long _delayStability = 8;
 
 void loop ( ) 
