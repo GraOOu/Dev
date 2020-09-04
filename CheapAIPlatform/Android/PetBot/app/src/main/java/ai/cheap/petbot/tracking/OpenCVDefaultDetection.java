@@ -7,6 +7,7 @@ import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.HOGDescriptor;
 
@@ -49,7 +50,9 @@ public class OpenCVDefaultDetection extends TrackingStrategy
         MatOfRect   bbox    = new MatOfRect   ( );
         MatOfDouble weights = new MatOfDouble ( );
 
-        hog.detectMultiScale ( mGray, bbox, weights );
+        hog.detectMultiScale ( mGray, bbox, weights
+                             /*, 0, new Size( 16, 16 ), new Size (0, 0)
+                             , 1.1, 2.0, false*/ );
 
         return bbox;
     }

@@ -7,8 +7,8 @@ import org.opencv.core.Rect;
  */
 public class TrackingContext
 {
-    public static int Width    = 240;
-    public static int Height   = 320;
+    public static int Width    = 640;
+    public static int Height   = 480;
 
     public static double HumanSizeRatio = 0.75;
 
@@ -42,8 +42,8 @@ public class TrackingContext
     public Rect     _selectedRect;
     public double   _selectedDistValue;
 
-    public double   _accelerationValue;
-    public double   _turnValue;
+    public double   SpeedRatio; // Lazy Property
+    public double   TurnRatio;  // Lazy Property
 
     public boolean  _displayInfo;
 }

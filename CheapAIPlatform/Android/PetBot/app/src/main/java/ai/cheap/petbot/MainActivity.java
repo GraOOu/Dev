@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
 
+        mOpenCvCameraView.setMaxFrameSize(640,480);
+
         mOpenCvCameraView.setCvCameraViewListener(this);
 
     }
@@ -188,20 +190,25 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
 
     // Intelligence will emerge from this point !!!
 
-    Controller controller = new ReplayerController ( );
+    // Controller controller = new ReplayerController ( );
+    Controller controller = null;
 
     public Mat onCameraFrame ( CvCameraViewFrame inputFrame ) {
 
-        Mat mat = inputFrame.rgba ( );
+        // Mat mat = inputFrame.rgba ( );
+        Mat mat = inputFrame.gray ( );
 
         ParamContainer params = new ParamContainer ( );
         params.Frame = mat;
         params.Cmd = UglyFeedBack;
 
+        if ( controller == null )
+            controller = new HumanTrackingController ( );
+
         controller.Update ( params );
 
         // if UsbService was correctly binded, Send data
-        if ( ( params.Cmd != null ) && (usbService != null) ) {
+        if ( ( params.Cmd != null ) && ( usbService != null ) ) {
 
             String cmd = params.Cmd + "\r\n";
             usbService.write ( cmd.getBytes ( ) );

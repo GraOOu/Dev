@@ -15,7 +15,7 @@ import java.lang.Math;
 /**
  * Created by GraOOu on 13/02/2016.
  */
-public class GrrrPedestrian extends OpenCVDefaultDetection
+public class WalkingPedestrianTracking extends OpenCVDefaultDetection
 {
     /*
         Select the centerer rect
@@ -59,9 +59,20 @@ public class GrrrPedestrian extends OpenCVDefaultDetection
 
             TrackingContext context = TrackingContext.GetInstance ( );
 
+            // Compute SpeedRatio
+
+            double heightRatio = theGoodRect.height / ( TrackingContext.Height * TrackingContext.HumanSizeRatio );
+            context.SpeedRatio = ( 1 / heightRatio ) - 1.0;
+
+            // Compute TurnRation
+
+            int    screenCenter = TrackingContext.Width / 2;
+            int    rectCenter   = theGoodRect.x + theGoodRect.width / 2;
+            context.TurnRatio   = ( screenCenter - rectCenter ) / screenCenter;
+
             if ( context._displayInfo )
             {
-                // Compute SpeedRatio
+                // Display SpeedRatio
 
                 double textPosX = 10;
                 double textPosY = TrackingContext.Height * 0.85;
@@ -69,23 +80,16 @@ public class GrrrPedestrian extends OpenCVDefaultDetection
                 Point  position     = new Point ( textPosX, textPosY );
                 double fontScale    = 0.5;
 
-                double heightRatio  = theGoodRect.height / ( TrackingContext.Height * TrackingContext.HumanSizeRatio );
-                double speedRatio   = ( 1 / heightRatio ) - 1.0;
-
                 String infos = "SpeedRatio : ";
-                infos += String.format ( "%.2f", speedRatio );
+                infos += String.format ( "%.2f", context.SpeedRatio );
                 Imgproc.putText ( mGray, infos, position, Core.FONT_HERSHEY_COMPLEX_SMALL, fontScale, new Scalar ( 255 ) );
 
-                // Compute TurnRation
+                // Display TurnRation
 
                 position = new Point ( 10, TrackingContext.Height * 0.85 + 12 );
 
-                int    screenCenter = TrackingContext.Width / 2;
-                int    rectCenter   = theGoodRect.x + theGoodRect.width / 2;
-                double turnRatio    = ( screenCenter - rectCenter ) * heightRatio;
-
                 infos = "TurnRatio : ";
-                infos += String.format ( "%.2f", turnRatio );
+                infos += String.format ( "%.2f", context.TurnRatio );
                 Imgproc.putText ( mGray, infos, position, Core.FONT_HERSHEY_COMPLEX_SMALL, fontScale, new Scalar ( 255 ) );
             }
 
