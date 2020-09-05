@@ -202,8 +202,10 @@ public class MainActivity extends AppCompatActivity implements CvCameraViewListe
         params.Frame = mat;
         params.Cmd = UglyFeedBack;
 
-        if ( controller == null )
+        if ( controller == null ) {
             controller = new HumanTrackingController ( );
+            //controller = new BasicTestController ( );
+        }
 
         controller.Update ( params );
 

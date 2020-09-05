@@ -4,7 +4,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-public class BasicTestController {
+public class BasicTestController extends Controller {
 
     // Small Automat
     private String[] commands = new String[] { "S", "A", "F", "L", "R", "B", "A", "S" };

@@ -24,6 +24,11 @@ public class WalkingPedestrianTracking extends OpenCVDefaultDetection
     @Override
     public Mat Process ( Mat mGray )
     {
+        TrackingContext context = TrackingContext.GetInstance ( );
+
+        context.SpeedRatio = 0.0;
+        context.TurnRatio  = 0.0;
+
         MatOfRect bbox = ProcessHOG ( mGray );
 
         // Compute image center
@@ -57,8 +62,6 @@ public class WalkingPedestrianTracking extends OpenCVDefaultDetection
 
             Imgproc.rectangle ( mGray, ptMin, ptMax, new Scalar ( 0 ), 2 );
 
-            TrackingContext context = TrackingContext.GetInstance ( );
-
             // Compute SpeedRatio
 
             double heightRatio = theGoodRect.height / ( TrackingContext.Height * TrackingContext.HumanSizeRatio );
@@ -66,8 +69,8 @@ public class WalkingPedestrianTracking extends OpenCVDefaultDetection
 
             // Compute TurnRation
 
-            int    screenCenter = TrackingContext.Width / 2;
-            int    rectCenter   = theGoodRect.x + theGoodRect.width / 2;
+            double screenCenter = TrackingContext.Width / 2;
+            double rectCenter   = theGoodRect.x + theGoodRect.width / 2;
             context.TurnRatio   = ( screenCenter - rectCenter ) / screenCenter;
 
             if ( context._displayInfo )
@@ -78,7 +81,7 @@ public class WalkingPedestrianTracking extends OpenCVDefaultDetection
                 double textPosY = TrackingContext.Height * 0.85;
 
                 Point  position     = new Point ( textPosX, textPosY );
-                double fontScale    = 0.5;
+                double fontScale    = 1.0;
 
                 String infos = "SpeedRatio : ";
                 infos += String.format ( "%.2f", context.SpeedRatio );

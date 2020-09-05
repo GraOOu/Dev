@@ -10,7 +10,7 @@ public class TrackingContext
     public static int Width    = 640;
     public static int Height   = 480;
 
-    public static double HumanSizeRatio = 0.75;
+    public static double HumanSizeRatio = 0.8;
 
     public static TrackingContext _instance = null;
 
