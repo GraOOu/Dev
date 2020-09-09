@@ -71,13 +71,13 @@ class MotorShield
 
       void Left ( )
       {
-        motorRl->run ( FORWARD );
+        motorRl->run ( BACKWARD );
         motorRl->setSpeed ( 255 );
       }
 
       void Right ( )
       {
-        motorRl->run ( BACKWARD );
+        motorRl->run ( FORWARD );
         motorRl->setSpeed ( 255 );
       }
 
